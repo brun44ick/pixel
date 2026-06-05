@@ -5,7 +5,8 @@
 body {
     background-color: rgb(15, 23, 42);
     color: white;
-    font-family: Inter, Roboto, Helvetica, Arial, sans-serif;
+    font-family: "Inter", "Roboto", "Helvetica", "Arial", sans-serif;
+    /* background-color: #ec4899; */
     margin: 0px;
 
 }
@@ -47,14 +48,19 @@ svg {
     fill: white;
 }
 
-h1 {
+.sec h1 {
     color:rgb(236, 72, 153);
     padding-top: 60px;
     font-size: 3em;
     margin: 0px;
 }
 
-p {
+h1 {
+    margin: 0px;
+    color: white;
+}
+
+.sec p {
     font-size: 1em;
     padding: 10px;
 }
@@ -79,10 +85,18 @@ p {
 
 .navalny {
     padding-top: 30px;
+    border: 10px solid rgba(30, 41, 59, 0.8);
+    border-radius: 8px;
+    
 }
 
 .cover {
     flex-direction: column;
+}
+
+article {
+    display: flex;
+    align-items: center;
 }
 
 .grid {
@@ -108,7 +122,7 @@ p {
     height: 90vh;
     width: 90vw;
     justify-content: center;
-    gap: 10px;
+    gap: 20px;
 }
 
 .vertical {
@@ -119,9 +133,38 @@ p {
     margin: 0px;
 }
 
+.instruments {
+    gap: 20px;
+}
+
 input {
     all: unset;
     border: none;
     width: 24px;
     height: 28px;
+}
+
+.selected {
+    border: 1px solid white;
+    box-shadow: 0px 0px 10px 5px rgba(32, 4, 243, 0.623);
+    padding: 5px;
+    border-radius: 5px;
+}
+/* 
+.tool {
+    border: none;
+    box-shadow: none;
+    padding: 0px;
+    border-radius: 0px;
+} */
+
+footer {
+    height: 30vh;
+    width: 98vw;
+    background-color: rgba(30, 41, 59, 0.8);
+    justify-content: space-around;
+}
+
+.fter {
+    font-size: 10px;
 }
