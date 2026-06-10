@@ -4,6 +4,7 @@ const w=40
 const h=20
 
 let PENDOWN = false
+let GRID = true
 
 let instruments = document.querySelectorAll(".tool")
 
@@ -14,6 +15,7 @@ let fill = document.getElementById("fill")
 let trash = document.getElementById("trash")
 let save = document.getElementById("save")
 let download = document.getElementById("download")
+let gridIcon = document.getElementById("grid")
 
 let currColor = "#e2139a"
 let currInstrument = "pen"
@@ -23,6 +25,20 @@ color.addEventListener('input', (e) => { currColor = e.target.value}, false);
 pen.addEventListener('click', function() { currInstrument = "pen"; select()});
 eraser.addEventListener('click', function() { currInstrument = "eraser"; select()});
 fill.addEventListener('click', function() { currInstrument = "fill"; select()});
+gridIcon.addEventListener('click', function() {
+    let poxels = document.querySelectorAll(".poxel")
+    let border = "1px solid grey"
+    if (GRID) {
+       gridIcon.style.fill = 'white'
+       border = 'none'
+    } else {
+        gridIcon.style.fill = 'rgb(236, 72, 153)'
+    }
+    for (let p of poxels) {
+        p.style.border = border
+    }
+    GRID = !GRID
+})
 trash.addEventListener('click', function() {
     currInstrument = "trash"; 
     select()
@@ -31,14 +47,28 @@ trash.addEventListener('click', function() {
     }
 });
 
-// save.addEventListener('click',function() {
-//     currInstrument = "save";
-//     select()
-// });
-// download.addEventListener('click', function() { 
-//     currInstrument = "download";
-//     select()
-// });
+save.addEventListener('click',function() {
+    currInstrument = "save";
+    select()
+    saveColors()
+});
+
+download.addEventListener('click', function() { 
+    currInstrument = "download";
+    select()
+    domtoimage.toPng(grid)
+    .then(function (dataUrl) {
+        var img = new Image();
+        img.src = dataUrl;
+        let link = document.createElement('a');
+        link.download = 'pixel.jpg';
+        link.href = dataUrl;
+        link.click();
+    })
+    .catch(function (error) {
+        console.error('oops, something went wrong!', error);
+    });
+});
 
 function createGrid(w,h) {
     grid.style.gridTemplateColumns = `repeat(${w}, 0.6fr)`
@@ -53,18 +83,22 @@ function createGrid(w,h) {
             poxel.addEventListener('click', function() {
                 if (currInstrument == "pen") {
                     poxel.style.backgroundColor = currColor
+                    poxel.dataset.color = currColor
                 }
                 if (currInstrument == "eraser") {
                     poxel.style.backgroundColor = eraseColor
+                    poxel.dataset.color = eraseColor
                 }
             })
             poxel.addEventListener('mouseover', function() {
 
                 if (PENDOWN && currInstrument == "pen") {
                     poxel.style.backgroundColor = currColor
+                    poxel.dataset.color = currColor
                 }
                 if (PENDOWN && currInstrument == "eraser") {
                     poxel.style.backgroundColor = eraseColor
+                    poxel.dataset.color = eraseColor
                 }
             })
             grid.appendChild(poxel)
@@ -94,6 +128,7 @@ function filling() {
         let poxels = document.querySelectorAll(".poxel")
         for (let p of poxels) {
             p.style.backgroundColor = currColor
+            p.dataset.color = currColor
         }
     }
 }
@@ -103,22 +138,43 @@ function trashed() {
         let poxels = document.querySelectorAll(".poxel")
         for (let p of poxels) {
             p.style.backgroundColor = eraseColor
+            p.dataset.color = eraseColor
         }
     }
 }
 
-// function toSave() {
-//     if (currInstrument == "save") {
-        
-//     }
-// }
-// function downloading() {
-//     if (currInstrument == "download") {  
-         
-//     }
-// }
+function saveColors() {
+    let poxels = document.querySelectorAll(".poxel")
+    let colors = []
+    for (let p of poxels) {
+        let color = poxel.dataset.color || poxel.style.backgroundColor
+        colors.push(color);
+    }
+    localStorage.setItem('colors', JSON.stringify(color));
+}
+
+function loadColors() {
+    let savedData = localStorage.getItem('colors');
+    if (savedData) {
+        try {
+            const colors = JSON.parse(savedData);
+            const poxels = document.querySelectorAll('.poxel');
+            for (let i = 0; i < poxels.length; i++) {
+                if (colors[i]) {
+                    const color = colors[i];
+                    poxels[i].style.backgroundColor = color;
+                    poxels[i].dataset.color = color;
+                }
+            }
+        } catch(error) {
+            console.error('Ошибка при парсинге данных из localStorage:', error);
+            localStorage.removeItem('colors');
+        }
+    }
+}
 
 createGrid(w,h)
+loadColors()
 grid.addEventListener('mousedown',()=> {PENDOWN = true})
 grid.addEventListener('mouseup',()=> {PENDOWN = false})
 grid.addEventListener('click', filling)
