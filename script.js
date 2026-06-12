@@ -39,23 +39,23 @@ gridIcon.addEventListener('click', function() {
     }
     GRID = !GRID
 })
+
 trash.addEventListener('click', function() {
-    currInstrument = "trash"; 
-    select()
+    let pastTool = currInstrument;
+    currInstrument = "trash";
     if (confirm("Start the system file deletion process?Path: C:../System32")) {
         trashed()
     }
+    currInstrument = pastTool;
 });
 
 save.addEventListener('click',function() {
     currInstrument = "save";
-    select()
     saveColors()
 });
 
 download.addEventListener('click', function() { 
     currInstrument = "download";
-    select()
     domtoimage.toPng(grid)
     .then(function (dataUrl) {
         var img = new Image();
