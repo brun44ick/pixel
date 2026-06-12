@@ -150,7 +150,7 @@ function saveColors() {
         let color = p.dataset.color || p.style.backgroundColor
         colors.push(color);
     }
-    localStorage.setItem('colors', JSON.stringify(color));
+    localStorage.setItem('colors', JSON.stringify(colors));
 }
 
 function loadColors() {
