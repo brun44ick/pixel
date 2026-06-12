@@ -147,7 +147,7 @@ function saveColors() {
     let poxels = document.querySelectorAll(".poxel")
     let colors = []
     for (let p of poxels) {
-        let color = poxel.dataset.color || poxel.style.backgroundColor
+        let color = p.dataset.color || p.style.backgroundColor
         colors.push(color);
     }
     localStorage.setItem('colors', JSON.stringify(color));
